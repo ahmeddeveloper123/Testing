@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .section {
+            padding: 40px;
+            border: 2px solid black;
+            margin: 40px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            height: 300px;
+        }
+
+        .section:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        .descr {
+            width: 50%;
+        }
+
+        .image-div {
+            width: 50%;
+            position: relative;
+        }
+
+        .floating-img {
+            width: 450px !important;
+            position: absolute;
+            width: 100%;
+            height: auto;
+        }
+    </style>
+    <!-- Include GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+
+<body>
+    <div class="section" id="section1">
+        <div class="descr">
+            <h1>What is Lorem Ipsum?</h1>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+        </div>
+        <div class="image-div" id="imageDiv1"></div>
+    </div>
+    <div class="section" id="section2">
+        <div class="descr">
+            <h1>What is Lorem Ipsum?</h1>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+        </div>
+        <div class="image-div" id="imageDiv2"></div>
+    </div>
+    <div class="section" id="section3">
+        <div class="descr">
+            <h1>What is Lorem Ipsum?</h1>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+        </div>
+        <div class="image-div" id="imageDiv3"></div>
+    </div>
+    <div class="section" id="section4">
+        <div class="descr">
+            <h1>What is Lorem Ipsum?</h1>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+        </div>
+        <div class="image-div" id="imageDiv4"></div>
+    </div>
+    <div class="section" id="section5">
+        <div class="descr">
+            <h1>What is Lorem Ipsum?</h1>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+        </div>
+        <div class="image-div" id="imageDiv5"></div>
+    </div>
+
+    <script>
+    const sections = document.querySelectorAll('.section');
+    const floatingImage = document.createElement('img');
+    floatingImage.src = "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg";
+    floatingImage.classList.add('floating-img');
+    document.body.appendChild(floatingImage);
+
+    // GSAP animation function
+    function moveImageAccordingToScroll() {
+        const scrollPosition = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const totalHeight = document.body.scrollHeight - windowHeight;
+        const sectionHeight = totalHeight / (sections.length - 1);
+
+        // Calculate which sections to animate between
+        const currentSectionIndex = Math.floor(scrollPosition / sectionHeight);
+        const nextSectionIndex = Math.min(currentSectionIndex + 1, sections.length - 1);
+
+        const startSection = sections[currentSectionIndex];
+        const endSection = sections[nextSectionIndex];
+
+        // Get positions of current and next sections
+        const startRect = startSection.querySelector('.image-div').getBoundingClientRect();
+        const endRect = endSection.querySelector('.image-div').getBoundingClientRect();
+
+        const startY = startRect.top + window.scrollY;
+        const startX = startRect.left + window.scrollX;
+        const endY = endRect.top + window.scrollY;
+        const endX = endRect.left + window.scrollX;
+
+        // Calculate the progress between sections
+        const progress = (scrollPosition % sectionHeight) / sectionHeight;
+
+        // Interpolate position between start and end sections
+        const currentY = startY + (endY - startY) * progress;
+        const currentX = startX + (endX - startX) * progress;
+        const currentWidth = startRect.width + (endRect.width - startRect.width) * progress;
+
+        // Move the floating image
+        gsap.to(floatingImage, {
+            top: currentY,
+            left: currentX,
+            width: currentWidth,
+            duration: 0.1,
+            ease: "linear"
+        });
+    }
+
+    // Event listener for scrolling
+    window.addEventListener('scroll', moveImageAccordingToScroll);
+
+    // Initial positioning
+    moveImageAccordingToScroll();
+    </script>
+
+</body>
+
+</html>
